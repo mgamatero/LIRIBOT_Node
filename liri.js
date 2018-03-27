@@ -43,10 +43,7 @@ switch (process.argv[2]) {
       if (err) {
         return console.log('Error occurred: ' + err);
       }
-      // console.log("There are " + data.tracks.items.length + " result(s) for " + q)
-      // for (var i = 0; i < data.tracks.items.length; i++) {
-
-      //for multiple artists
+   
       for (var x = 0; x < data.tracks.items[0].artists.length; x++) {
         console.log("Artist(s): " + data.tracks.items[0].artists[x].name)
       }
@@ -60,10 +57,10 @@ switch (process.argv[2]) {
   //==============================================================
 
   case 'movie-this':
-  var movieTitle = process.argv[3]
+    var movieTitle = process.argv[3]
     var OMDB_API_KEY = "3fe4a8d6"
     var request = require('request');
-    request("http://www.omdbapi.com/?t=\'"+movieTitle + "\'&apikey=" + OMDB_API_KEY, function (error, response, body) {
+    request("http://www.omdbapi.com/?t=\'" + movieTitle + "\'&apikey=" + OMDB_API_KEY, function (error, response, body) {
       if (error) { console.log('error:', error) }
       else { // Print the error if one occurred
         //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -76,11 +73,27 @@ switch (process.argv[2]) {
         console.log("Language: " + JSON.parse(body).Language)
         console.log("Plot: " + JSON.parse(body).Plot)
         console.log("Actors: " + JSON.parse(body).Actors)
-       
+
       }
     });
     break
+  //==============================================================================
 
+  case 'do-what-it-says':
+    var fs = require('fs')
+    fs.appendFile("random.txt", "Hello ", function (e) {
+      if (e) {
+        console.log(e)
+      }
+    
+    })
+
+
+    
+
+
+    break;
+  //==============================================================================
 
   default:
     console.log("Please choose \'my-tweets\', \'spotify-this-song <song name here>\', \'movie-this <movie name here>\'")
