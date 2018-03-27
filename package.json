@@ -1,0 +1,27 @@
+{
+  "name": "LIRIBOT_Node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "keys.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgamatero/LIRIBOT_Node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgamatero/LIRIBOT_Node/issues"
+  },
+  "homepage": "https://github.com/mgamatero/LIRIBOT_Node#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "moment": "^2.21.0",
+    "node-spotify-api": "^1.0.7",
+    "request": "^2.85.0",
+    "twitter": "^1.7.1"
+  }
+}
