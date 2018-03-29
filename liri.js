@@ -1,5 +1,4 @@
 
-
 require('dotenv').config();
 var twitterKeys = require('./keys.js')
 var Twitter = require('twitter');
@@ -18,7 +17,6 @@ function getTwitter() {
   var params = { screen_name: 'gamaSampleTweet' };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
     if (!error) {
-      console.log(JSON.stringify(tweets))
       console.log("Recent tweet(s) from " + params.screen_name)
       for (var i = 0; i < tweets.length; i++) {
         console.log("Tweet #" + (i + 1) + ") " + tweets[i].text + "--- created " + moment(tweets[i].created_at).format('MMM Do YYYY'))
@@ -29,10 +27,10 @@ function getTwitter() {
 }
 //end getTwitter() ================================================================
 
-console.log("Please choose \'my-tweets\', \'spotify-this-song <song name here>\', \'movie-this <movie name here>\'")
+
 //Function that handles Spotify npm requests. 
 //==================================================================================
-function getSpotify() {
+function getSpotify(q) {
   var spotifyKeys = require('./keys.js')
   var Spotify = require('node-spotify-api');
 
@@ -41,10 +39,7 @@ function getSpotify() {
     secret: spotifyKeys.spotify.secret
   });
 
-  var q = process.argv[3]
-  if (q === undefined) {
-    q = "The Sign Ace of Base"
-  }
+
 
   spotify.search({ type: 'track', query: q, limit: 12 }, function (err, data) {
     if (err) {
@@ -65,14 +60,11 @@ function getSpotify() {
 
 //Function that handles OMDB api via REQUEST npm. 
 //==================================================================================
-function getOMDB() {
-  var movieTitle = process.argv[3]
-  if (movieTitle === undefined) {
-    movieTitle = "Mr. Nobody"
-  }
+function getOMDB(movie) {
+
   var OMDB_API_KEY = "3fe4a8d6"
   var request = require('request');
-  request("http://www.omdbapi.com/?t=\'" + movieTitle + "\'&apikey=" + OMDB_API_KEY, function (error, response, body) {
+  request("http://www.omdbapi.com/?t=\'" + movie + "\'&apikey=" + OMDB_API_KEY, function (error, response, body) {
     if (error) { console.log('error:', error) }
     else { // Print the error if one occurred
       //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -93,6 +85,10 @@ function getOMDB() {
 
 
 
+
+
+
+
 switch (process.argv[2]) {
   case 'my-tweets':
     getTwitter()
@@ -100,35 +96,69 @@ switch (process.argv[2]) {
   //==============================================================
 
   case 'spotify-this-song':
-    getSpotify()
+    var spotifyInput = process.argv[3]
+    if (spotifyInput === undefined) {
+      spotifyInput = "The Sign Ace of Base"
+    }
+    getSpotify(spotifyInput)
     break
   //==============================================================
 
   case 'movie-this':
-    getOMDB()
+
+    var movieTitle = process.argv[3]
+    if (movieTitle === undefined) {
+      movieTitle = "Mr. Nobody"
+    }
+    getOMDB(movieTitle)
     break
   //==============================================================================
 
   case 'do-what-it-says':
-    var randomTxtContents = ''
+    var command = "Empty"
+    var searchValue = ''
     var fs = require('fs')
-    // fs.appendFile("random.txt", "Hello ", function (e) {
-    //   if (e) {
-    //     console.log(e)
-    // }
-    // })
     fs.readFile("random.txt", "utf8", function (e, data) {
       if (e) {
         console.log(e)
       }
-      randomTxtContents = data
-      console.log(randomTxtContents)
+      else {
+        //console.log(data)
+        command = data.substr(0, data.indexOf(" "))
+        searchValue = data.substr(data.indexOf(" ") + 1, data.length)
+      }
+
+      switch (command) {
+        case 'my-tweets':
+          getTwitter()
+          break
+
+        case 'spotify-this-song':
+          if (searchValue === undefined) {
+            searchValue = "The Sign Ace of Base"
+          }
+          getSpotify(searchValue)
+          break
+
+        case 'movie-this':
+          if (searchValue === undefined) {
+            searchValue = "Mr. Nobody"
+          }
+          getOMDB(searchValue)
+          break
+
+        default:
+          console.log("Random.txt is empty or invalid")
+      }
     })
+
 
     break;
   //==============================================================================
 
   default:
-    console.log("Please choose \'my-tweets\', \'spotify-this-song <song name here>\', \'movie-this <movie name here>\'")
+    console.log("Please choose \'my-tweets\', \'spotify-this-song <song name here>\', \'movie-this <movie name here>\', \'do-what-it-says\'")
 }
+
+
 

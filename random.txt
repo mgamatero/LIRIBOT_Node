@@ -1,2 +1,1 @@
-node liri.js spotify-this "Long and Winding Road"
-node liri.js movie-this "Star Wars"
+spotify-this-song "Stay with Me"
