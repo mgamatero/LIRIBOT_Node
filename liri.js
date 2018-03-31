@@ -1,4 +1,5 @@
 
+var fs = require('fs')
 require('dotenv').config();
 var twitterKeys = require('./keys.js')
 var Twitter = require('twitter');
@@ -17,10 +18,17 @@ function getTwitter() {
   var params = { screen_name: 'gamaSampleTweet' };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
     if (!error) {
+      var logFileString="\n"
       console.log("Recent tweet(s) from " + params.screen_name)
+      logFileString = logFileString + "Recent tweet(s) from " + params.screen_name+"\n"
+
       for (var i = 0; i < tweets.length; i++) {
         console.log("Tweet #" + (i + 1) + ") " + tweets[i].text + "--- created " + moment(tweets[i].created_at).format('MMM Do YYYY'))
+        logFileString = logFileString + "Tweet #" + (i + 1) + ") " + tweets[i].text + "--- created " + moment(tweets[i].created_at).format('MMM Do YYYY')+'\n'
       }
+      fs.appendFile("log.txt", logFileString,function(e){
+        if (e){console.log(e)}
+      })
     }
     else { console.log("error") }
   });
